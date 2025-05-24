@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-dp_1-!+4((6yixqxhosp5yhqhyejj7in18_29ru6+uj1fcyjj_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['26.44.253.98', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,6 +79,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,7 +88,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'apps.profile.middleware.UpdateLastSeenMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
@@ -170,6 +170,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "apps/main/static",
     BASE_DIR / "apps/services/static",
     BASE_DIR / "apps/profile/static",
+    os.path.join(BASE_DIR, "static"),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
