@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Послуги{% endblock %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/services.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <main>
+        <section class="hero">
+            <h1>Оголошення</h1>
+            <p>HomeFinder пропонує безліч корисних інструментів для пошуку житла.</p>
+        </section>
+
+        <form class="filter-form" method="GET">
+            <select name="search_type" class="filter-select">
+                <option value="">Всі типи</option>
+                <option value="Квартира" {% if request.GET.search_type == "Квартира" %}selected{% endif %}>Квартира</option>
+                <option value="Будинок" {% if request.GET.search_type == "Будинок" %}selected{% endif %}>Будинок</option>
+            </select>
+        
+            <input type="number" name="min_price" placeholder="Введіть мінімальну ціну" value="{{ request.GET.min_price }}">
+            <input type="number" name="max_price" placeholder="Введіть максимальну ціну" value="{{ request.GET.max_price }}">
+            <input type="number" name="min_area" placeholder="Мінімальна площа (м²)" class="filter-input" value="{{ request.GET.min_area }}">
+            <input type="number" name="max_area" placeholder="Максимальна площа (м²)" class="filter-input" value="{{ request.GET.max_area }}">
+        
+            <button type="submit" class="btn">Застосувати фільтри</button>
+            {% if request.GET %}
+                <a href="{% url 'services' %}" class="btn">Очистити фільтри</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <a href={% url "new_listing" %} class="btn add_advertisments">Додати оголошення</a>
+            {% else %}
+                <a href={% url "account_login" %} class="btn add_advertisments">Додати оголошення</a>
+            {% endif %}
+        </form>
+
+
+        <section class="services">
+            
+            <h2></h2>
+            <div class="advertisments-list">
+                {% for ad in ads %}
+                    <a class="advertisments-card", href="{% url 'ad_detail' ad.id %}">
+                        <h2>{{ ad.title }}</h2>
+                        <img src="{{ ad.images.first.image.url }}" alt="{{ ad.title }}" style="max-height: 200px;">
+                        <p>{{ ad.description|truncatechars:100 }}</p>
+                        <hr>
+                        <p><strong>Площа (м²):</strong>{{ ad.area }}</p>
+                        <p><strong>Ціна:</strong> {{ ad.price }} грн</p>
+                        <p><em>Опубліковано: {{ ad.created_at|date:"d.m.Y H:i" }}</em></p>
+                    </a>
+                {% empty %}
+                    <p>Оголошень ще немає.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+{% endblock %}

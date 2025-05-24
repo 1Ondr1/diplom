@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head lang="uk">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Пошук квартир та будинків{% endblock %}</title>
+    <link rel="stylesheet" href="{% static "css/global.css" %}" />
+    {% block extra_css %}{% endblock %}
+    {% block extra_js %}{% endblock extra_js %}
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a class="header-logo" href="{% url 'home' %}">
+                <img src="{% static "images/logo.jpg" %}" class="logo-img" alt="Logo">
+                <div class="logo">HomeFinder</div>
+            </a>
+            <ul class="nav-list">
+                <li><a href="{% url 'home' %}" {% if request.path == '/' %}class="active"{% endif %}>Головна</a></li>
+                <li><a href="{% url 'services' %}" {% if request.path == '/services/' %}class="active"{% endif %}>Оголошення</a></li>
+                <li><a href="{% url 'about' %}" {% if request.path == '/about/' %}class="active"{% endif %}>Про нас</a></li>
+                <li><a href="{% url 'contacts' %}" {% if request.path == '/contacts/' %}class="active"{% endif %}>Контакти</a></li>
+                {% block user %}
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'profile' username=user.username%}" class="btn">Профiль</a></li>
+                    {% else %}
+                        <li><a href="{% url 'account_login' %}" class="btn">Увійти</a></li>
+                    {% endif %}
+                {% endblock %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 HomeFinder.</p>
+    </footer>
+</body>
+</html>

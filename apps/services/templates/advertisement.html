@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% load static %}
+{% load user_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/services.css' %}" />
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+{% endblock extra_js %}
+
+{% block content %}
+
+<section class="ad-details">
+    <div class="ad-left-block">
+        <div class="block">
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    {% for image in ad.images.all %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}" alt="Image" class="ad-image"/>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Стрілки навігації -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+    
+                <!-- Пагінація (крапочки) -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+    <div class="ad-right-block">
+        <div class="block ad-info">
+            <h1>{{ ad.title }}</h1>
+            <p>{{ ad.description }}</p>
+            <p>Ціна: {{ ad.price }} грн</p>
+            <p>Тип нерухомості: 
+                {% if ad.type == "house" %}
+                    Будинок
+                {% elif ad.type == "apartment" %}
+                    Квартира
+                {% else %}
+                    {{ ad.type }}
+                {% endif %}
+            <p>Площа (м²): {{ ad.area }}</p>
+            <p>Дата публікування: {{ ad.created_at }}</p>
+            {% if user.is_authenticated and user.id == ad.owner.id %}
+                <a href="{% url 'edit_ad' ad.id %}" class="btn">Редагувати оголошення</a>
+            {% endif %}
+        </div>
+        <div class="block owner-info">
+            <h2>Користувач</h2>
+            {% if ad.owner.avatar %}
+                <img src="{{ ad.owner.avatar.url }}" alt="img" class="profile-img" />
+            {% else %}
+                <img src="{% static "images/user.jpg" %}" alt="img" class="profile-img" />
+            {% endif %}
+            <p>Логін: {{ ad.owner.username }}</p>
+            {% if ad.owner.phone_number %}
+                <p>Телефон: {{ ad.owner.phone_number }}</p>
+            {% endif %}
+            <p>Email: {{ ad.owner.email }}</p>
+            {% check_user_online ad.owner as owner_online %}
+            {% if owner_online %}
+                <span style="color: green;">Онлайн</span>
+            {% else %}
+                <span style="color: grey;">Останній раз був {{ ad.owner.last_seen }}</span>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+<script>
+    const swiper = new Swiper('.swiper', {
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Додати оголошення{% endblock %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/services.css' %}" />
+{% endblock extra_css %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data", class="form ad-form">
+    <h2>Додати оголошення</h2>
+    {% csrf_token %}
+    {{ ad_form.title }}
+    {{ ad_form.description }}
+    {{ ad_form.type }}
+    {{ ad_form.area }}
+    {{ ad_form.price }}
+    {{ ad_form.property_type }}
+    <label for="id_images">Завантажити зображення</label>
+    <input type="file" name="images" id="id_images" multiple class="form-control">
+    <button type="submit" class="btn">Опублікувати</button>
+</form>
+{% endblock content %}

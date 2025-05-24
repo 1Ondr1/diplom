@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Реєстрація{% endblock %}
+{% load i18n %}
+{% load allauth account %}
+{% load widget_tweaks%}
+{% load static %}
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block user %}{% endblock %}
+
+{% block content %}
+
+<main>
+    <form action="{% url 'account_signup' %}" method="post" class="form">
+        {% csrf_token %}
+        <section class="hero">
+            <h2>Реєстрація</h2>
+        </section>
+
+        {{ form.email|attr:"placeholder:Email"}}
+
+        {{ form.username|attr:"placeholder:Логін" }}
+
+        {{ form.first_name|attr:"placeholder:Ім'я" }}
+
+        {{ form.last_name|attr:"placeholder:Призвище" }}
+
+        {{ form.password1|attr:"placeholder:Пароль" }}
+
+        {{ form.password2|attr:"placeholder:Підтвердження пароля" }}
+        
+        <button type="submit" class="btn">Зареєструватися</button>
+        {% if form.errors %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                {{ field.errors }}
+            {% endfor %}
+        {% endif %}
+        <a href="{% url 'account_login' %}" class="register-btn">Увiйти</a>
+    </form>
+</main>
+
+{% endblock %}

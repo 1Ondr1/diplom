@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Редагувати оголошення{% endblock %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/services.css' %}" />
+{% endblock extra_css %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data" class="edit-ad-form">
+    <div class="edit-ad-info form">
+        <h2>Редагувати оголошення</h2>
+        {% csrf_token %}
+        <p>Назва оголошення</p>
+        {{ ad_form.title }}
+        <p>Тип приміщення</p>
+        {{ ad_form.type }}
+        <p>Опис</p>
+        {{ ad_form.description }}
+        <p>Ціна (грн)</p>
+        {{ ad_form.price }}
+        <p>Площа (м²)</p>
+        {{ ad_form.area }}
+        <div class="form-row">
+            <button type="submit" name="save" class="btn">Зберегти зміни</button>
+            <button type="submit" name="delete" class="btn btn-exit">Видалити оголошення</button>
+        </div>
+    </div>
+    <div class="edit-ad-images form">
+        <h2>Поточні зображення:</h2>
+        <div class="image-checkboxes">
+            {% for image in images %}
+                <label class="image-checkbox">
+                    <input type="checkbox" class="selected_images" value="{{ image.id }}">
+                    <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}">
+                </label>
+            {% endfor %}
+        </div>
+        <div id="warning-message" style="display: none; color: red; font-weight: bold; margin: 10px 0;"></div>
+        <h2>Додати нові зображення:</h2>
+        <input type="file" name="images" multiple>
+
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.selected_images');
+        const warningMessage = document.getElementById('warning-message');
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const checked = document.querySelectorAll('.selected_images:checked');
+                if (checked.length === checkboxes.length) {
+                    this.checked = false;
+                    warningMessage.innerText = 'Має залишитися хоча б одне зображення.';
+                    warningMessage.style.display = 'block';
+                } else {
+                    warningMessage.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

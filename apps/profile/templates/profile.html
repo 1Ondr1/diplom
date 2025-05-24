@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+{% endblock extra_css %}
+
+{% block user %}{% endblock user %}
+
+{% block content %}
+
+<div class="profile-page">
+
+    <form method="POST" action="{% url 'account_logout' %}" class="profile-info change-form">
+        {% csrf_token %}
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="img" class="profile-img" />
+        {% else %}
+            <img src="{% static "images/user.jpg" %}" alt="img" class="profile-img" />
+        {% endif %}
+        <h2>Профіль користувача</h2>
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Last Name: {{ user.last_name }}</p>
+        <div>
+            {% if user.is_superuser %}
+            <a href="{% url 'admin:index' %}" class="btn">Адмінка</a>
+            {% endif %}
+            <button type="submit" class="btn btn-exit">Вийти</button>
+        </div>
+    </form>
+
+    <form method="POST" class="form change-form" enctype="multipart/form-data">
+        <h2>Змінити аватар</h2>
+        {% csrf_token %}
+        <input type="file", name="avatar", accept="image/*"id="id_avatar">
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+        <button type="submit" class="btn" name="change_avatar">Зберегти аватар</button>
+    </form>
+
+    <form method="POST" class="form change-form">
+        <h2>Змінити пароль</h2>
+        {% csrf_token %}
+        {{ password_form.oldpassword }}
+        {{ password_form.password1 }}
+        {{ password_form.password2 }}
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+        {% if password_form.errors %}
+          <ul class="pass_requirements">
+            {% for field in password_form %}
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in password_form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <button type="submit" class="btn" name="change_password">Зберегти зміни</button>
+    </form>
+
+        <h2>Ваші оголошення</h2>
+        <div class="advertisments-list">
+            {% for ad in ads %}
+                <a class="advertisments-card", href="{% url 'ad_detail' ad.id %}">
+                    <h2>{{ ad.title }}</h2>
+                    <img src="{{ ad.images.first.image.url }}" alt="{{ ad.title }}" style="max-height: 200px;">
+                    <p>{{ ad.description|truncatechars:100 }}</p>
+                    <hr>
+                    <p><strong>Площа (м²):</strong>{{ ad.area }}</p>
+                    <p><strong>Ціна:</strong> {{ ad.price }} грн</p>
+                    <p><em>Опубліковано: {{ ad.created_at|date:"d.m.Y H:i" }}</em></p>
+                </a>
+            {% empty %}
+                <p>У вас немає оголошень.</p>
+            {% endfor %}
+        </div>
+
+</div>
+
+{% endblock %}
