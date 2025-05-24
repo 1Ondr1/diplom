@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'apps.profile',
     'apps.services',
+    'whitenoise',
 ]
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY=None
