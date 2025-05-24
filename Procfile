@@ -1,1 +1,1 @@
-web: python namage.py migrate && gunicorn rent_platform.wsgi
+web: python manage.py migrate && gunicorn rent_platform.wsgi
