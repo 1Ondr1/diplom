@@ -1,1 +1,1 @@
-web: gunicorn homfinder.wsgi
+web: gunicorn rent_platform.wsgi
