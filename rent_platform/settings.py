@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://homfinder.up.railway.app/', '*']
+CSRF_TRUSTED_ORIGINS = ['https://homfinder.up.railway.app/']
 
 
 # Application definition
@@ -172,7 +172,6 @@ STATICFILES_DIRS = [
     BASE_DIR / "apps/main/static",
     BASE_DIR / "apps/services/static",
     BASE_DIR / "apps/profile/static",
-    os.path.join(BASE_DIR, "static"),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
